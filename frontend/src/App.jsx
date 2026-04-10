@@ -9,6 +9,7 @@ import { Entry } from "./pages/entry/Entry.page";
 import { AddTicket } from "./pages/new-ticket/AddTicket.page";
 import { TicketLists } from "./pages/ticket-listing/TicketLists.page";
 import { Ticket } from "./pages/ticket/Ticket.page";
+import { Registration } from "./pages/registration/Registration.page";
 import "./App.css";
 function App() {
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ function App() {
           path="/"
           element={isAuth ? <Navigate to="/dashboard" /> : <Entry />}
         />
+        <Route path="/registration" element={<Registration />} />
       </Routes>
     </div>
   );

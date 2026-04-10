@@ -1,15 +1,52 @@
-import React from 'react'
-import { Form, Button } from 'react-bootstrap'
+import React, { useState } from "react";
+import { Form, Button, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { replyOnSelectedTicket } from "../../features/ticket/ticketActions";
+import { Send } from "lucide-react";
 
-export const UpdateTicket = ({reply, handleOnChange, handleOnSubmit}) => {
+export const UpdateTicket = ({ _id }) => {
+  const dispatch = useDispatch();
+  const [message, setMessage] = useState("");
+  const { isLoading, replyMsg } = useSelector((state) => state.tickets);
+
+  const handleOnChange = (e) => setMessage(e.target.value);
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+    const msgObj = {
+      message,
+      sender: "Client",
+    };
+    dispatch(replyOnSelectedTicket(_id, msgObj));
+    setMessage("");
+  };
+
   return (
     <Form onSubmit={handleOnSubmit}>
-        <Form.Label className='fw-bolder'>Reply</Form.Label>
-        <Form.Text className='text-muted d-block'>Please reply your message or update the ticket</Form.Text>
-        <Form.Control value={reply} onChange={handleOnChange} as="textarea" rows={5} name="detail"/>
-        <div className="text-end mt-3 mb-3">
-        <Button variant="info" type="submit">Reply</Button>
-        </div>
+      <Form.Group className="mb-3">
+        <Form.Control
+          as="textarea"
+          rows={4}
+          name="message"
+          value={message}
+          onChange={handleOnChange}
+          placeholder="Type your message here..."
+          className="rounded-4 border-light-subtle shadow-sm p-3"
+          required
+        />
+      </Form.Group>
+      <div className="text-end">
+        <Button 
+            variant="primary" 
+            type="submit" 
+            className="d-flex align-items-center gap-2 px-4 py-2 rounded-4 shadow-sm border-0"
+            style={{ background: 'var(--saas-primary)' }}
+            disabled={isLoading}
+        >
+          {isLoading ? <Spinner size="sm" /> : <><Send size={16} /> Send Reply</>}
+        </Button>
+      </div>
+      {replyMsg && <div className="text-success mt-2 small text-end">{replyMsg}</div>}
     </Form>
-  )
-}
+  );
+};

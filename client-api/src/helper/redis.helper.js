@@ -5,6 +5,10 @@ const client = redis.createClient({
 });
 
 const connectRedis = async () => {
+  if (!process.env.REDIS_URL) {
+    console.warn("⚠️ REDIS_URL is not defined in .env! Redis features (like session tracking) will not work.");
+    return;
+  }
   try {
     await client.connect();
     console.log("Redis client connected successfully");

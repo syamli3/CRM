@@ -21,7 +21,11 @@ connectRedis();
 //MongoDB connection
 import mongoose from "mongoose";
 
-mongoose.connect(process.env.MONGODB_URL);
+if (process.env.MONGODB_URL) {
+  mongoose.connect(process.env.MONGODB_URL);
+} else {
+  console.warn("⚠️ MONGODB_URL is not defined in .env! Database features will not work.");
+}
 
 if (process.env.NODE_ENV !== "production") {
   mongoose.connection.on("connected", () => {
@@ -45,6 +49,19 @@ import tokenRouter from "./src/routers/token.router.js";
 app.use("/v1/user", userRouter);
 app.use("/v1/ticket", ticketRouter);
 app.use("/v1/token", tokenRouter);
+
+// Root route
+app.get("/", (req, res) => {
+  res.json({
+    status: "success",
+    message: "CRM API is running!",
+    endpoints: {
+      user: "/v1/user",
+      ticket: "/v1/ticket",
+      token: "/v1/token"
+    }
+  });
+});
 
 //Error Handler
 import errorHandler from "./src/utils/errorHandler.js";

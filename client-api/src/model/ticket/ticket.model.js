@@ -92,11 +92,31 @@ const deleteTicket = async (ticketId, clientId) => {
   });
 };
 
+const updateClientTicketStatus = async (ticketId, clientId, updateObj) => {
+  return new Promise((resolve, reject) => {
+    try {
+      ticketModel
+        .findOneAndUpdate(
+          { _id: ticketId, clientId },
+          {
+            $set: updateObj,
+          },
+          { new: true }
+        )
+        .then((data) => resolve(data))
+        .catch((err) => reject(err));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export {
   insertTicket,
   getTickets,
   getTicketById,
   updateClientTicket,
+  updateClientTicketStatus,
   updateStatusClose,
   deleteTicket,
 };

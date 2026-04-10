@@ -4,7 +4,7 @@ const loginApi = (formData) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/v1/user/login",
+        `${import.meta.env.VITE_API_URL}/user/login`,
         formData
       );
       if (response) {
@@ -26,7 +26,7 @@ const logoutApi = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await axios.delete(
-        "http://localhost:3000/v1/user/logout",
+        `${import.meta.env.VITE_API_URL}/user/logout`,
         {
           headers: {
             authorization: sessionStorage.getItem("accessToken"),
@@ -52,7 +52,7 @@ const authorizeAccessToken = async () => {
   if (accessJWT) {
     try {
       const response = await axios.get(
-        "http://localhost:3000/v1/user/authorize",
+        `${import.meta.env.VITE_API_URL}/user/authorize`,
         {
           headers: {
             authorization: accessJWT,
@@ -77,7 +77,7 @@ const refreshAccessToken = async () => {
   const { refreshJWT } = crmSystem ? JSON.parse(crmSystem) : {};
   if (refreshJWT) {
     try {
-      const response = await axios.get("http://localhost:3000/v1/token", {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/token`, {
         headers: {
           authorization: refreshJWT,
         },
